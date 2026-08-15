@@ -26,17 +26,38 @@ dotenv.config();
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+// export async function getAIResponse(prompt) {
+//   try {
+//     // Use the latest available model
+//     // const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+//     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+
+//     const result = await model.generateContent(prompt);
+//     const response = await result.response.text();
+
+//     return response;
+//   } catch (error) {
+//     console.error("Gemini API Error:", error);
+//     throw error;
+//   }
+// }
+
+
+
+
 export async function getAIResponse(prompt) {
   try {
-    // Use the latest available model
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const result = await model.generateContent(prompt);
     const response = await result.response.text();
 
-    return response;
+    return response || "I'm here! Ask me anything.";
   } catch (error) {
-    console.error("Gemini API Error:", error);
-    throw error;
+    console.error("Gemini API Error:", error.message);
+
+    // fallback reply so chat doesn't break
+    return "⚠️ AI service is busy now. Please try again later.";
   }
 }

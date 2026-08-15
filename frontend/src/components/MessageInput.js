@@ -48,7 +48,7 @@ const MessageInput = () => {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
-
+    console.log("Hello");
     try {
       await sendMessage({ text: text.trim(), image: imagePreview });
       setText("");

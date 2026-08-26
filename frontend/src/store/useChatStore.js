@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import { useAuthStore } from "./useAuthStore";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios.js";
 
 export const useChatStore = create((set, get) => ({
   messages: [],
@@ -13,10 +13,10 @@ export const useChatStore = create((set, get) => ({
   getUsers: async () => {
     set({ isUsersLoading: true });
     try {
-      const res = await axios.get("http://localhost:8000/api/messages/users");
+      const res = await axiosInstance.get("/messages/users");
       set({ users: res.data });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to load users");
     } finally {
       set({ isUsersLoading: false });
     }
@@ -25,10 +25,10 @@ export const useChatStore = create((set, get) => ({
   getMessages: async (userId) => {
     set({ isMessagesLoading: true });
     try {
-      const res = await axios.get(`http://localhost:8000/api/messages/${userId}`);
+      const res = await axiosInstance.get(`/messages/${userId}`);
       set({ messages: res.data });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to load messages");
     } finally {
       set({ isMessagesLoading: false });
     }
@@ -37,17 +37,11 @@ export const useChatStore = create((set, get) => ({
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
     try {
-      const res = await axios.post(`http://localhost:8000/api/messages/send/${selectedUser._id}`, messageData);
-      // set({ messages: [...messages, ...res.data] });
-         const messagesToAdd = Array.isArray(res.data) ? res.data : [res.data];
-set({ messages: [...messages, ...messagesToAdd] });
-
-
-      console.log(res.data)
+      const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
+      const messagesToAdd = Array.isArray(res.data) ? res.data : [res.data];
+      set({ messages: [...messages, ...messagesToAdd] });
     } catch (error) {
-      // toast.error(error.response.data.message);
-      toast.error(error?.response?.data?.error || "Message sending failed");
-
+      toast.error(error?.response?.data?.error || error?.response?.data?.message || "Message sending failed");
     }
   },
 

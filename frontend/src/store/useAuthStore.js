@@ -1,12 +1,7 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { io } from "socket.io-client";
-
-const BASE_URL = "http://localhost:8000";
-const API_URL = `${BASE_URL}/api/auth`;
-
-axios.defaults.withCredentials = true; // if backend uses cookies
+import { axiosInstance, BASE_URL } from "../lib/axios.js";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -19,7 +14,7 @@ export const useAuthStore = create((set, get) => ({
 
   checkAuth: async () => {
     try {
-      const res = await axios.get(`${API_URL}/check`);
+      const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
       get().connectSocket();
     } catch (error) {
@@ -33,7 +28,7 @@ export const useAuthStore = create((set, get) => ({
   signup: async (data) => {
     set({ isSigningUp: true });
     try {
-      const res = await axios.post(`${API_URL}/signup`, data);
+      const res = await axiosInstance.post("/auth/signup", data);
       set({ authUser: res.data });
       toast.success("Account created successfully");
       get().connectSocket();
@@ -47,7 +42,7 @@ export const useAuthStore = create((set, get) => ({
   login: async (data) => {
     set({ isLoggingIn: true });
     try {
-      const res = await axios.post(`${API_URL}/login`, data);
+      const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data });
       toast.success("Logged in successfully");
       get().connectSocket();
@@ -60,7 +55,7 @@ export const useAuthStore = create((set, get) => ({
 
   logout: async () => {
     try {
-      await axios.post(`${API_URL}/logout`);
+      await axiosInstance.post("/auth/logout");
       set({ authUser: null, onlineUsers: [] });
       toast.success("Logged out successfully");
       get().disconnectSocket();
@@ -72,7 +67,7 @@ export const useAuthStore = create((set, get) => ({
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
     try {
-      const res = await axios.put(`${API_URL}/update-profile`, data);
+      const res = await axiosInstance.put("/auth/update-profile", data);
       set({ authUser: res.data });
       toast.success("Profile updated successfully");
     } catch (error) {

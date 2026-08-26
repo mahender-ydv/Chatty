@@ -6,9 +6,14 @@ import http from "http";
 const app = express();
 const server = http.createServer(app);
 
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(",").map((url) => url.trim())
+  : ["http://localhost:3000"];
+
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000"],
+    origin: allowedOrigins,
+    credentials: true,
   },
 });
 

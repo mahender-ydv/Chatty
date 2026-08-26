@@ -11,7 +11,7 @@ const MessageInput = () => {
   const typingTimeoutRef = useRef(null);
 
   const { sendMessage, selectedUser } = useChatStore();
-  const { socket, authUser } = useAuthStore();
+  const { socket } = useAuthStore();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];

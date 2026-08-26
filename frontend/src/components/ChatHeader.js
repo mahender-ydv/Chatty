@@ -13,24 +13,24 @@ const ChatHeader = () => {
     : false;
 
   useEffect(() => {
-  if (!socket || !selectedUser) return;
+    if (!socket || !selectedUser) return;
 
-  const handleTyping = ({ userId }) => {
-    if (userId === selectedUser._id) setIsTyping(true);
-  };
+    const handleTyping = ({ userId }) => {
+      if (userId === selectedUser._id) setIsTyping(true);
+    };
 
-  const handleStopTyping = ({ userId }) => {
-    if (userId === selectedUser._id) setIsTyping(false);
-  };
+    const handleStopTyping = ({ userId }) => {
+      if (userId === selectedUser._id) setIsTyping(false);
+    };
 
-  socket.on("typing", handleTyping);
-  socket.on("stopTyping", handleStopTyping);
+    socket.on("typing", handleTyping);
+    socket.on("stopTyping", handleStopTyping);
 
-  return () => {
-    socket.off("typing", handleTyping);
-    socket.off("stopTyping", handleStopTyping);
-  };
-}, [socket, selectedUser?._id]);
+    return () => {
+      socket.off("typing", handleTyping);
+      socket.off("stopTyping", handleStopTyping);
+    };
+  }, [socket, selectedUser]);
 
 
   if (!selectedUser) return null;

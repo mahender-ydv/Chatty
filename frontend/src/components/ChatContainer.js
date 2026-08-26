@@ -22,6 +22,7 @@ const ChatContainer = () => {
     getMessages(selectedUser._id);
     subscribeToMessages();
     return () => unsubscribeFromMessages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser?._id]);
 
   useEffect(() => {

@@ -32,6 +32,7 @@ app.use(
 );
 
 // Routes
+console.log("hiii");
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
